@@ -197,6 +197,8 @@ static void solution_2_recursionTeste(int move_number, int position, int speed, 
 //   }
 // }
 
+int c = 0;
+
 static void solution_3_SmartWay(int move_number, int position, int speed, int final_position)
 {
   int speed_test, md_position, new_speed, position_test, brk;
@@ -204,33 +206,38 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
 
   while (position < final_position)
   {
-    position_test = position;
 
     for (new_speed = speed + 1; new_speed >= speed - 1; new_speed--)
     {
-       if (new_speed > _max_road_speed_) // testa se não ultrapassa o final TODO: n(n+1)2
-        {
-          continue;
-        }
-
-      brk = 0;
-      
-      for (speed_test = new_speed; speed_test >= _min_road_speed_ ; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+      if (new_speed > _max_road_speed_) // testa se não ultrapassa o final TODO: n(n+1)2
       {
-        if (position_test + speed_test > final_position)
+        continue;
+      }
+
+      position_test = position;
+
+      for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+      {
+        brk = 0;
+
+        if ((position_test + speed_test) > final_position)
         {
           brk = 1;
           break;
         }
-        for (md_position = 1; md_position <= speed_test; md_position++)  // testar posicao de travagem
+        for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
+        {
           if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
           {
             brk = 1;
             break;
           }
+        }
 
         if (brk)
+        {
           break; // deu errado? stop.
+        }
 
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
