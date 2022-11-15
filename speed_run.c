@@ -323,18 +323,19 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
   fp = 0;  // vai nos dizer se já está a chegar à posição final
   solution_1_best.n_moves = 0;
 
-  while (position < final_position)
-  {
-    printf("speed %d, postion %d movenumber %d\n", speed, position, move_number);
+  while (position >= 0 && position < final_position)
+  {//printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
+    
+    //printf("speed %d, postion %d movenumber %d\n", speed, position, move_number);
     brk = 0;
     if (fp) // chegou à posição final entao só diminui a velocidade
     {
-      if(speed>1) speed--;
+      speed--;
       position += speed;
       solution_1_count++;
       solution_1_best.positions[move_number++] = position;
       solution_1_best.n_moves++;
-      continue;
+      fp = 1;
     }
     else
     {
@@ -389,8 +390,8 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
         // se não deu para aumentar tenta MANTER a velocidade
         new_speed--;
         brk = 0;                                                    // resetamos a variavel
-        for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-        {
+        for (speed_test-1; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+        {// neste for ele começa no speed_test para não testar novamente as speeds anteriores
 
           if ((position_test + speed_test) > final_position)
           {
@@ -411,7 +412,6 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
           {
             break; // deu errado? stop.
           }
-
           position_test += speed_test; // future_position --> posicao teste, i --> speed teste
         }
         if (!brk) // chegou aqui porque deu errado ou certo?
@@ -586,6 +586,7 @@ static void solution_5_SmartWay(int move_number, int position, int speed, int fi
           solution_1_count++;
           solution_1_best.positions[move_number++] = position;
           solution_1_best.n_moves++;
+          //TODO:quando ele chega aqui já sabe que só vai diminuir
         }
       }
     }
