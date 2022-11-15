@@ -99,7 +99,7 @@ static void solution_1_recursion(int move_number, int position, int speed, int f
 }
 
 // minha
-static void solution_2_recursionTeste(int move_number, int position, int speed, int final_position)
+static void solution_2v1_recursionTeste(int move_number, int position, int speed, int final_position)
 {
   int i, new_speed;
 
@@ -130,7 +130,7 @@ static void solution_2_recursionTeste(int move_number, int position, int speed, 
   return;
 }
 
-static void solution_2_GoBack(int move_number, int position, int speed, int final_position)
+static void solution_2v2_GoBack(int move_number, int position, int speed, int final_position)
 {
   // o intuito desta funcao é trablhar com o move_number e o solution_1_best.positions[move_number] = position;
   // ou seja vamos adicionando +1 ao move_number e a posicao relativa ao solution_1_best.positions[move_number] = position;
@@ -279,11 +279,6 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
   }
 }
 
-// for (int m=0; m < 801; m++) {
-//   printf("%d, ", solution_1_best.positions[m]);
-// }
-// printf("\n");
-
 // static void solution_4_alpes(int move_number, int position, int speed, int final_position)
 // {
 //   int max, m_vel, new_speed,
@@ -324,78 +319,30 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
   solution_1_best.n_moves = 0;
 
   while (position >= 0 && position < final_position)
-  {//printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
-    
-    //printf("speed %d, postion %d movenumber %d\n", speed, position, move_number);
-    brk = 0;
-    if (fp) // chegou à posição final entao só diminui a velocidade
+  { // printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
+
+    // printf("speed %d, postion %d movenumber %d\n", speed, position, move_number);
+    if (fp == 2) // chegou à posição final entao só diminui a velocidade
     {
-      speed--;
+      
+      if (speed != 1)
+        speed--;
       position += speed;
       solution_1_count++;
       solution_1_best.positions[move_number++] = position;
       solution_1_best.n_moves++;
-      fp = 1;
     }
     else
     {
-
-      new_speed = speed + 1; // AUMENTAR a velocidade
-      if (new_speed <= _max_road_speed_)
+      if (fp == 1)
       {
-        position_test = position;
-
-        for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-        {
-          brk = 0;
-
-          if ((position_test + speed_test) > final_position) // testa se a posição não passa a posicao final
-          {
-            brk = 1;
-            break; // sim? então tenta manter a velocidade
-          }
-          for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
-          {
-            if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
-            {
-              brk = 1; // sim? então tenta manter a velocidade
-              break;
-            }
-          }
-          if (brk)
-          {
-            break; // deu errado? stop. tenta manter
-          }
-
-          position_test += speed_test; // future_position --> posicao teste, i --> speed teste
-        }
-      }
-      else
-      {
-        brk = 1;
-      }
-      //printf("brk: %d /brk", brk);
-      if (!brk) // chegou aqui porque deu errado ou certo?
-      {         // deu certo, guarda as variaveis e faz a proxima iteração
-
-        speed = new_speed;
-        position += speed;
-        solution_1_count++;
-        solution_1_best.positions[move_number++] = position;
-        solution_1_best.n_moves++;
-        //printf("move: %d /move", move_number);
-      }
-      else
-      {
-        // se não deu para aumentar tenta MANTER a velocidade
-        new_speed--;
-        brk = 0;                                                    // resetamos a variavel
-        for (speed_test-1; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-        {// neste for ele começa no speed_test para não testar novamente as speeds anteriores
+        brk = 0;                                                // resetamos a variavel
+        for (speed_test = speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+        {   printf("cona");                                                    // neste for ele começa no speed_test para não testar novamente as speeds anteriores
 
           if ((position_test + speed_test) > final_position)
           {
-            fp = 1; // a partir de agora ele só vai diminuir, por isso entra na condição fp
+            fp = 2; // a partir de agora ele só vai diminuir, por isso entra na condição fp
             brk = 1;
             break;
           }
@@ -432,161 +379,100 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
           solution_1_best.n_moves++;
         }
       }
-    }
-  }
-}
-
-static void solution_5_SmartWay(int move_number, int position, int speed, int final_position)
-{
-  int speed_test, md_position, new_speed, position_test, brk;
-  solution_1_best.n_moves = 0;
-
-  while (position < final_position)
-  {
-
-    new_speed = speed + 1;
-    if (new_speed <= _max_road_speed_) // testa se não ultrapassa o final TODO: n(n+1)2
-    {
-      position_test = position;
-
-      for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-      {
-        brk = 0;
-
-        if ((position_test + speed_test) > final_position)
-        {
-          brk = 1;
-          break;
-        }
-        for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
-        {
-          if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
-          {
-            brk = 1;
-            break;
-          }
-        }
-
-        if (brk)
-        {
-          break; // deu errado? stop.
-        }
-
-        position_test += speed_test; // future_position --> posicao teste, i --> speed teste
-      }
-
-      if (!brk) // não deu errado? temos o proximo passo :) --> atualizar as variaveis
-      {
-        speed = new_speed;
-        position += speed;
-        solution_1_count++;
-        solution_1_best.positions[move_number++] = position;
-        solution_1_best.n_moves++;
-      }
       else
       {
-        new_speed = speed;
-        position_test = position;
 
-        for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+        new_speed = speed + 1; // AUMENTAR a velocidade
+        if (new_speed <= _max_road_speed_)
         {
-          brk = 0;
+          position_test = position;
 
-          if ((position_test + speed_test) > final_position)
+          for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
           {
-            brk = 1;
-            break;
-          }
-          for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
-          {
-            if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+
+            if ((position_test + speed_test) > final_position) // testa se a posição não passa a posicao final
             {
+              fp = 1;
               brk = 1;
-              break;
+              break; // sim? então tenta manter a velocidade
             }
-          }
+            for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
+            {
+              if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+              {
+                brk = 1; // sim? então tenta manter a velocidade
+                break;
+              }
+            }
+            if (brk)
+            {
+              break; // deu errado? stop. tenta manter
+            }
 
-          if (brk)
-          {
-            break; // deu errado? stop.
+            position_test += speed_test; // future_position --> posicao teste, i --> speed teste
           }
-
-          position_test += speed_test; // future_position --> posicao teste, i --> speed teste
         }
-
-        if (!brk) // não deu errado? temos o proximo passo :) --> atualizar as variaveis
+        else
         {
+          brk = 1;
+        }
+        // printf("brk: %d /brk", brk);
+        if (!brk) // chegou aqui porque deu errado ou certo?
+        {         // deu certo, guarda as variaveis e faz a proxima iteração
+
           speed = new_speed;
           position += speed;
           solution_1_count++;
           solution_1_best.positions[move_number++] = position;
           solution_1_best.n_moves++;
+          // printf("move: %d /move", move_number);
         }
         else
         {
-          new_speed = speed - 1;
-          if (!brk) // não deu errado? temos o proximo passo :) --> atualizar as variaveis
-          {
+          // se não deu para aumentar tenta MANTER a velocidade
+          new_speed--;
+          brk = 0;                                        // resetamos a variavel
+          for (speed_test; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+          {                                               // neste for ele começa no speed_test para não testar novamente as speeds anteriores
+
+            if ((position_test + speed_test) > final_position)
+            {
+              fp = 1; // a partir de agora ele só vai diminuir, por isso entra na condição fp
+              brk = 1;
+              break;
+            }
+            for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
+            {
+              if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+              {
+                brk = 1;
+                break;
+              }
+            }
+
+            if (brk)
+            {
+              break; // deu errado? stop.
+            }
+            position_test += speed_test; // future_position --> posicao teste, i --> speed teste
+          }
+          if (!brk) // chegou aqui porque deu errado ou certo?
+          {         // deu certo, guarda as variaveis e faz a proxima iteração
             speed = new_speed;
             position += speed;
             solution_1_count++;
             solution_1_best.positions[move_number++] = position;
             solution_1_best.n_moves++;
-            break;
           }
-        }
-      }
-    }
-    else
-    {
-      new_speed = speed;
-      position_test = position;
-
-      for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-      {
-        brk = 0;
-
-        if ((position_test + speed_test) > final_position)
-        {
-          brk = 1;
-          break;
-        }
-        for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
-        {
-          if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+          else
           {
-            brk = 1;
-            break;
+            new_speed--; // DIMINUIR a velocidade, se não der mais nenhum ele vai obrigatoriamente diminuir a velocidade, por isso nao precisa de testar todas as outras condições
+            speed = new_speed;
+            position += speed;
+            solution_1_count++;
+            solution_1_best.positions[move_number++] = position;
+            solution_1_best.n_moves++;
           }
-        }
-
-        if (brk)
-        {
-          break; // deu errado? stop.
-        }
-
-        position_test += speed_test; // future_position --> posicao teste, i --> speed teste
-      }
-
-      if (!brk) // não deu errado? temos o proximo passo :) --> atualizar as variaveis
-      {
-        speed = new_speed;
-        position += speed;
-        solution_1_count++;
-        solution_1_best.positions[move_number++] = position;
-        solution_1_best.n_moves++;
-      }
-      else
-      {
-        new_speed = speed - 1;
-        if (!brk) // não deu errado? temos o proximo passo :) --> atualizar as variaveis
-        {
-          speed = new_speed;
-          position += speed;
-          solution_1_count++;
-          solution_1_best.positions[move_number++] = position;
-          solution_1_best.n_moves++;
-          //TODO:quando ele chega aqui já sabe que só vai diminuir
         }
       }
     }
