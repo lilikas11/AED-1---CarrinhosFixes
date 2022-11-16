@@ -34,6 +34,9 @@
 //
 
 static int max_road_speed[1 + _max_road_size_]; // positions 0.._max_road_size_
+static int posD = 0;
+static int spdD = 0;
+static int movD = 0;
 
 static void init_road_speeds(void)
 {
@@ -232,6 +235,7 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
 
     for (new_speed = speed + 1; new_speed >= speed - 1; new_speed--)
     {
+      brk = 0;
 
       if (new_speed > _max_road_speed_) // testa se não ultrapassa o final TODO: n(n+1)2
       {
@@ -242,14 +246,13 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
 
       for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
       {
-        brk = 0;
 
         if ((position_test + speed_test) > final_position)
         {
           brk = 1;
           break;
         }
-        for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
+        for (md_position = 0; md_position <= speed_test; md_position++) // testar posicao de travagem
         {
           if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
           {
@@ -437,9 +440,9 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
         {
           // se não deu para aumentar tenta MANTER a velocidade
           new_speed--;
-          brk = 0;                                        // resetamos a variavel
-          for (speed_test; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-          {                                               // neste for ele começa no speed_test para não testar novamente as speeds anteriores
+          brk = 0;                                                    // resetamos a variavel
+          for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+          {                                                           // neste for ele começa no speed_test para não testar novamente as speeds anteriores
 
             if ((position_test + speed_test) > final_position)
             {
@@ -472,7 +475,8 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
           }
           else
           {
-            if(speed != 1) new_speed--; // DIMINUIR a velocidade, se não der mais nenhum ele vai obrigatoriamente diminuir a velocidade, por isso nao precisa de testar todas as outras condições
+            if (speed != 1)
+              new_speed--; // DIMINUIR a velocidade, se não der mais nenhum ele vai obrigatoriamente diminuir a velocidade, por isso nao precisa de testar todas as outras condições
             speed = new_speed;
             position += speed;
             solution_1_count++;
@@ -482,6 +486,97 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
         }
       }
     }
+  }
+}
+
+static void solution_6_Dinamic(int move_number, int position, int speed, int final_position)
+{
+  int speed_test, md_position, new_speed, position_test, brk, rd;
+  solution_1_best.n_moves = 0;
+  int fp = 0;
+
+  while (position < final_position)
+  {
+    rd = 0;
+    if (rd == 0 || fp == 0)
+    {
+      new_speed = speed + 1;
+
+      if (new_speed <= _max_road_speed_) // testa se não ultrapassa o final TODO: n(n+1)2
+      {
+        position_test = position;
+
+        if ((position_test + (new_speed / 2) * (new_speed + 1)) > final_position)
+        {
+          fp = 1;
+          rd = 1;
+          break;
+        }
+
+        for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+        {
+          for (md_position = 0; md_position <= speed_test; md_position++) // testar posicao de travagem
+          {
+            if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+            {
+              rd = 1;
+              break;
+            }
+          }
+
+          if (brk)
+          {
+            break; // deu errado? stop.
+          }
+
+          position_test += speed_test; // future_position --> posicao teste, i --> speed teste
+        }
+      }
+      else
+      {
+        rd = 1;
+      }
+    }
+    if (rd == 1 || fp == 1)
+    {
+      new_speed = speed;
+      position_test = position;
+
+      if ((position_test + (new_speed / 2) * (new_speed + 1)) > final_position)
+      {
+        rd = 2;
+        break;
+      }
+      for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
+      {
+        for (md_position = 0; md_position <= speed_test; md_position++) // testar posicao de travagem
+        {
+          if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
+          {
+            fp = 2;
+            rd = 2;
+            break;
+          }
+        }
+
+        if (brk)
+        {
+          break; // deu errado? stop.
+        }
+
+        position_test += speed_test; // future_position --> posicao teste, i --> speed teste
+      }
+    }
+    if (rd == 2 || fp ==2)
+    {
+      new_speed = speed - 1;
+    }
+    // printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
+    speed = new_speed;
+    position += speed;
+    solution_1_count++;
+    solution_1_best.positions[move_number++] = position;
+    solution_1_best.n_moves++;
   }
 }
 
@@ -496,10 +591,23 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time();
   solution_1_count = 0ul;
   solution_1_best.n_moves = final_position + 100;
-  solution_5_BestWay(0, 0, 0, final_position); // mudei
+  solution_3_SmartWay(0, 0, 0, final_position); // mudei
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 
+static void solve_2(int final_position)
+{
+  if (final_position < 1 || final_position > _max_road_size_)
+  {
+    fprintf(stderr, "solve_1: bad final_position\n");
+    exit(1);
+  }
+  solution_1_elapsed_time = cpu_time();
+  solution_1_count = 0ul;
+  solution_1_best.n_moves = final_position + 100;
+  solution_6_Dinamic(movD, posD, spdD, final_position); // mudei
+  solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
+}
 //
 // example of the slides
 //
