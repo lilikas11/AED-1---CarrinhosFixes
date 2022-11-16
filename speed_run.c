@@ -317,14 +317,14 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
   brk = 0; // vai nos dizer se encontrou a solução
   fp = 0;  // vai nos dizer se já está a chegar à posição final
   solution_1_best.n_moves = 0;
-
+  printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
   while (position >= 0 && position < final_position)
   { // printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
 
     // printf("speed %d, postion %d movenumber %d\n", speed, position, move_number);
     if (fp == 2) // chegou à posição final entao só diminui a velocidade
     {
-      
+
       if (speed != 1)
         speed--;
       position += speed;
@@ -336,18 +336,22 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
     {
       if (fp == 1)
       {
-        brk = 0;                                                // resetamos a variavel
+        // resetamos a variavel
         for (speed_test = speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-        {   printf("cona");                                                    // neste for ele começa no speed_test para não testar novamente as speeds anteriores
+        {
+
+          // neste for ele começa no speed_test para não testar novamente as speeds anteriores
 
           if ((position_test + speed_test) > final_position)
           {
+
             fp = 2; // a partir de agora ele só vai diminuir, por isso entra na condição fp
             brk = 1;
             break;
           }
           for (md_position = 1; md_position <= speed_test; md_position++) // testar posicao de travagem
           {
+
             if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
             {
               brk = 1;
@@ -357,8 +361,10 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
 
           if (brk)
           {
+
             break; // deu errado? stop.
           }
+
           position_test += speed_test; // future_position --> posicao teste, i --> speed teste
         }
         if (!brk) // chegou aqui porque deu errado ou certo?
@@ -388,7 +394,7 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
           position_test = position;
 
           for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
-          {
+          {                                                           // TODO: experimentar isto com spt >= 2
 
             if ((position_test + speed_test) > final_position) // testa se a posição não passa a posicao final
             {
@@ -466,7 +472,7 @@ static void solution_5_BestWay(int move_number, int position, int speed, int fin
           }
           else
           {
-            new_speed--; // DIMINUIR a velocidade, se não der mais nenhum ele vai obrigatoriamente diminuir a velocidade, por isso nao precisa de testar todas as outras condições
+            if(speed != 1) new_speed--; // DIMINUIR a velocidade, se não der mais nenhum ele vai obrigatoriamente diminuir a velocidade, por isso nao precisa de testar todas as outras condições
             speed = new_speed;
             position += speed;
             solution_1_count++;
