@@ -497,6 +497,12 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
 
   while (position < final_position)
   {
+    if (fp == 0)
+    {
+      movD = move_number;
+      posD = position;
+      spdD = speed;
+    }
     rd = 0;
     if (rd == 0 || fp == 0)
     {
@@ -544,6 +550,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
 
       if ((position_test + (new_speed / 2) * (new_speed + 1)) > final_position)
       {
+        fp = 2;
         rd = 2;
         break;
       }
@@ -553,7 +560,6 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
         {
           if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
           {
-            fp = 2;
             rd = 2;
             break;
           }
@@ -567,7 +573,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
     }
-    if (rd == 2 || fp ==2)
+    if (rd == 2 || fp == 2)
     {
       new_speed = speed - 1;
     }
@@ -581,7 +587,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
 }
 
 // minha
-static void solve_1(int final_position)
+static void solve_2(int final_position)
 {
   if (final_position < 1 || final_position > _max_road_size_)
   {
@@ -595,7 +601,7 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 
-static void solve_2(int final_position)
+static void solve_1(int final_position)
 {
   if (final_position < 1 || final_position > _max_road_size_)
   {
