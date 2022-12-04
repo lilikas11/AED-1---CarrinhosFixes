@@ -104,7 +104,10 @@ static void solution_1_recursion(int move_number, int position, int speed, int f
     }
 }
 
-// minha
+static solution_t solution_2v1, solution_2v1_best;
+static double solution_2v1_elapsed_time; // time it took to solve the problem
+static unsigned long solution_2v1_count; // effort dispended solving the problem
+
 static void solution_2v1_recursionTeste(int move_number, int position, int speed, int final_position)
 {
   int i, new_speed;
@@ -228,7 +231,7 @@ static void solution_2v2_GoBack(int move_number, int position, int speed, int fi
   }
 }
 
-static solution_t solution_3, solution_3_best;
+static solution_t solution_3_best;
 static double solution_3_elapsed_time; // time it took to solve the problem
 static unsigned long solution_3_count; // effort dispended solving the problem
 
@@ -607,17 +610,34 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 
-// função 3
-static void solve_3(int final_position)
+
+// função 2v1
+static void solve_2v1(int final_position)
 {
   if (final_position < 1 || final_position > _max_road_size_)
   {
     fprintf(stderr, "solve_1: bad final_position\n");
     exit(1);
   }
-  solution_3_elapsed_time = cpu_time();
+  solution_2v1_elapsed_time = cpu_time();
   solution_1_count = 0ul;
   solution_1_best.n_moves = final_position + 100;
+  solution_2v1_recursionTeste(0, 0, 0, final_position); // mudei
+  solution_2v1_elapsed_time = cpu_time() - solution_1_elapsed_time;
+}
+
+
+// função 3
+static void solve_3(int final_position)
+{
+  if (final_position < 1 || final_position > _max_road_size_)
+  {
+    fprintf(stderr, "solve_3: bad final_position\n");
+    exit(1);
+  }
+  solution_3_elapsed_time = cpu_time();
+  solution_3_count = 0ul;
+  solution_3_best.n_moves = final_position + 100;
   solution_3_SmartWay(0, 0, 0, final_position); // mudei
   solution_3_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
@@ -682,7 +702,7 @@ int main(int argc, char *argv[argc + 1])
   init_road_speeds();
   // run all solution methods for all interesting sizes of the problem
   final_position = 1;
-  solution_1_elapsed_time = 0.0;
+  
   printf("    + --- ---------------- --------- +\n");
   printf("    |                plain recursion |\n");
   printf("--- + --- ---------------- --------- +\n");
@@ -695,6 +715,7 @@ int main(int argc, char *argv[argc + 1])
 
     if (strcmp(argv[argc-1], "solution1") == 0)
     {
+      solution_1_elapsed_time = 0.0;
       // first solution method (very bad)
       if (solution_1_elapsed_time < _time_limit_)
       {
@@ -715,6 +736,7 @@ int main(int argc, char *argv[argc + 1])
     else
     {
       // third solution  method (better one)
+      solution_3_elapsed_time = 0.0;
       if (solution_3_elapsed_time < _time_limit_)
       {
         solve_3(final_position);
