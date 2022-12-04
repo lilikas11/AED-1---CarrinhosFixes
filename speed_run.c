@@ -26,6 +26,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h> //usado para podermos escolher que funcção vamos correr
 #include "../P02/elapsed_time.h"
 #include "make_custom_pdf.c"
 
@@ -35,7 +36,7 @@
 
 static int max_road_speed[1 + _max_road_size_]; // positions 0.._max_road_size_
 
-//save the values for the dinamic function
+// save the values for the dinamic function
 static int posD = 0;
 static int spdD = 0;
 static int movD = 0;
@@ -74,7 +75,6 @@ static solution_t solution_1, solution_1_best;
 static double solution_1_elapsed_time; // time it took to solve the problem
 static unsigned long solution_1_count; // effort dispended solving the problem
 
-
 static void solution_1_recursion(int move_number, int position, int speed, int final_position)
 {
   int i, new_speed;
@@ -110,8 +110,8 @@ static void solution_2v1_recursionTeste(int move_number, int position, int speed
   int i, new_speed;
 
   // record move
-  solution_2_count++;
-  solution_.positions[move_number] = position;
+  solution_1_count++;
+  solution_1.positions[move_number] = position;
   // is it a solution?
   if (position == final_position && speed == 1)
   {
@@ -235,7 +235,7 @@ static unsigned long solution_3_count; // effort dispended solving the problem
 static void solution_3_SmartWay(int move_number, int position, int speed, int final_position)
 {
   int speed_test, md_position, new_speed, position_test, brk;
-  solution_1_best.n_moves = 0;
+  solution_3_best.n_moves = 0;
 
   while (position < final_position)
   {
@@ -607,6 +607,7 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 
+// função 3
 static void solve_3(int final_position)
 {
   if (final_position < 1 || final_position > _max_road_size_)
@@ -663,7 +664,7 @@ static void example(void)
 // main program
 //
 
-int main(int argc, char *argv[argc + 1])
+int main(int argc, char *argv[argc + 1]) 
 {
 #define _time_limit_ 3600.0
   int n_mec, final_position, print_this_one;
@@ -691,42 +692,47 @@ int main(int argc, char *argv[argc + 1])
   {
     print_this_one = (final_position == 10 || final_position == 20 || final_position == 50 || final_position == 100 || final_position == 200 || final_position == 400 || final_position == 800) ? 1 : 0;
     printf("%3d |", final_position);
-    // first solution method (very bad)
-    if (solution_1_elapsed_time < _time_limit_)
+
+    if (strcmp(argv[argc-1], "solution1") == 0)
     {
-      solve_1(final_position);
-      if (print_this_one != 0)
+      // first solution method (very bad)
+      if (solution_1_elapsed_time < _time_limit_)
       {
-        sprintf(file_name, "%03d_1.pdf", final_position);
-        make_custom_pdf_file(file_name, final_position, &max_road_speed[0], solution_1_best.n_moves, &solution_1_best.positions[0], solution_1_elapsed_time, solution_1_count, "Plain recursion");
+        solve_1(final_position);
+        if (print_this_one != 0)
+        {
+          sprintf(file_name, "%03d_1.pdf", final_position);
+          make_custom_pdf_file(file_name, final_position, &max_road_speed[0], solution_1_best.n_moves, &solution_1_best.positions[0], solution_1_elapsed_time, solution_1_count, "Plain recursion");
+        }
+        printf(" %3d %16lu %9.3e |", solution_1_best.n_moves, solution_1_count, solution_1_elapsed_time);
       }
-      printf(" %3d %16lu %9.3e |", solution_1_best.n_moves, solution_1_count, solution_1_elapsed_time);
+      else
+      {
+        solution_1_best.n_moves = -1;
+        printf("                                |");
+      }
     }
     else
     {
-      solution_1_best.n_moves = -1;
-      printf("                                |");
+      // third solution  method (better one)
+      if (solution_3_elapsed_time < _time_limit_)
+      {
+        solve_3(final_position);
+        if (print_this_one != 0)
+        {
+          sprintf(file_name, "%03d_1.pdf", final_position);
+          make_custom_pdf_file(file_name, final_position, &max_road_speed[0], solution_3_best.n_moves, &solution_3_best.positions[0], solution_3_elapsed_time, solution_3_count, "Plain recursion");
+        }
+        printf(" %3d %16lu %9.3e |", solution_3_best.n_moves, solution_3_count, solution_3_elapsed_time);
+      }
+      else
+      {
+        solution_3_best.n_moves = -1;
+        printf("                                |");
+      }
     }
-    */
     // second solution method (less bad)
     //....
-
-    // third solution  method (better one)
-    if (solution_3_elapsed_time < _time_limit_)
-    {
-      solve_3(final_position);
-      if (print_this_one != 0)
-      {
-        sprintf(file_name, "%03d_1.pdf", final_position);
-        make_custom_pdf_file(file_name, final_position, &max_road_speed[0], solution_3_best.n_moves, &solution_3_best.positions[0], solution_3_elapsed_time, solution_3_count, "Plain recursion");
-      }
-      printf(" %3d %16lu %9.3e |", solution_1_best.n_moves, solution_1_count, solution_1_elapsed_time);
-    }
-    else
-    {
-      solution_1_best.n_moves = -1;
-      printf("                                |");
-    }
 
     // done
     printf("\n");
