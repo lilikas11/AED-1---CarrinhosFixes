@@ -611,7 +611,7 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time();
   solution_1_count = 0ul;
   solution_1_best.n_moves = final_position + 100;
-  solution_6_Dinamic(movD, posD, spdD, final_position); // mudei
+  solution_3_SmartWay(movD, posD, spdD, final_position); // mudei
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 //
