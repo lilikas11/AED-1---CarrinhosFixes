@@ -149,7 +149,7 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
     {
       brk = 0;
 
-      if (new_speed > _max_road_speed_) // testa se ultrupassa a velociade maxima
+      if (new_speed > _max_road_speed_) // testa se ultrapassa a velocidade maxima
       {
         continue;
       }
@@ -173,10 +173,7 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
           }
         }
 
-        if (brk)
-        {
-          break; // deu errado? stop.
-        }
+        
 
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
