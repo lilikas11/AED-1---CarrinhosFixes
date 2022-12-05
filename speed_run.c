@@ -113,8 +113,11 @@ static void solution_2v1_recursionTeste(int move_number, int position, int speed
   // is it a solution?
   if (position == final_position && speed == 1)
   {
-    solution_2v1_best = solution_2v1;
-    solution_2v1_best.n_moves = move_number;
+    if (move_number < solution_2v1_best.n_moves)
+    {
+      solution_2v1_best = solution_2v1;
+      solution_2v1_best.n_moves = move_number;
+    }
     return;
   }
   // no, try all legal speeds
@@ -128,8 +131,6 @@ static void solution_2v1_recursionTeste(int move_number, int position, int speed
         solution_2v1_recursionTeste(move_number + 1, position + new_speed, new_speed, final_position);
       }
     }
-
-  return;
 }
 
 static solution_t solution_3_best;
