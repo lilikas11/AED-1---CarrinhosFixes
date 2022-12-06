@@ -9,8 +9,8 @@
 //   cc -Wall -O2 -D_use_zlib_=1 solution_speed_run.c -lm -lz
 //
 // Place your student numbers and names here
-//   N.Mec. XXXXXX  Name: XXXXXXX
-//
+//   N.Mec. 108713  Name: Liliana Ribeiro
+//   N.Mec. 108713  Name: L
 
 //
 // static configuration
@@ -204,10 +204,11 @@ static unsigned long solution_6_count; // effort dispended solving the problem
 
 static void solution_6_Dinamic(int move_number, int position, int speed, int final_position)
 {
-  int speed_test, md_position, new_speed, position_test, brk, rd;
+  int speed_test, md_position, new_speed, position_test;
+  int brk = 0;
   solution_6_best.n_moves = 0;
+  int rd = 0;
   int fp = 0;
-  brk = 0;
 
   while (position < final_position)
   {
@@ -217,7 +218,6 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
       posD = position;
       spdD = speed;
     }
-    rd = 0;
     if (rd == 0 || fp == 0)
     {
       new_speed = speed + 1;
@@ -310,7 +310,7 @@ static void solve_1(int final_position)
   solution_1_elapsed_time = cpu_time();
   solution_1_count = 0ul;
   solution_1_best.n_moves = final_position + 100;
-  solution_1_recursion(movD, posD, spdD, final_position); // mudei
+  solution_1_recursion(movD, posD, spdD, final_position);
   solution_1_elapsed_time = cpu_time() - solution_1_elapsed_time;
 }
 
@@ -325,7 +325,7 @@ static void solve_2v1(int final_position)
   solution_2v1_elapsed_time = cpu_time();
   solution_2v1_count = 0ul;
   solution_2v1_best.n_moves = final_position + 100;
-  solution_2v1_recursionTeste(0, 0, 0, final_position); // mudei
+  solution_2v1_recursionTeste(0, 0, 0, final_position);
   solution_2v1_elapsed_time = cpu_time() - solution_2v1_elapsed_time;
 }
 
@@ -340,7 +340,7 @@ static void solve_3(int final_position)
   solution_3_elapsed_time = cpu_time();
   solution_3_count = 0ul;
   solution_3_best.n_moves = final_position + 100;
-  solution_3_SmartWay(0, 0, 0, final_position); // mudei
+  solution_3_SmartWay(0, 0, 0, final_position);
   solution_3_elapsed_time = cpu_time() - solution_3_elapsed_time;
 }
 
@@ -355,7 +355,8 @@ static void solve_6(int final_position)
   solution_6_elapsed_time = cpu_time();
   solution_6_count = 0ul;
   solution_6_best.n_moves = final_position + 100;
-  solution_6_Dinamic(movD, posD, spdD, final_position); // mudei
+  // solution_6_Dinamic(movD, posD, spdD, final_position);
+  solution_6_Dinamic(0,0,0, final_position);
   solution_6_elapsed_time = cpu_time() - solution_6_elapsed_time;
 }
 
@@ -457,7 +458,7 @@ int main(int argc, char *argv[argc + 1])
     }
     else if (strcmp(argv[argc - 1], "solution6") == 0)
     {
-      // third solution  method (better one)
+      // six solution  method (dinamic one)
       solution_6_elapsed_time = 0.0;
       if (solution_6_elapsed_time < _time_limit_)
       {
