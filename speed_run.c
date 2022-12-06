@@ -105,6 +105,9 @@ static unsigned long solution_2v1_count; // effort dispended solving the problem
 
 static void solution_2v1_recursionTeste(int move_number, int position, int speed, int final_position)
 {
+
+  if(solution_2v1_best.positions[move_number] > position) return;
+  
   int i, new_speed;
 
   // record move
@@ -118,9 +121,11 @@ static void solution_2v1_recursionTeste(int move_number, int position, int speed
       solution_2v1_best = solution_2v1;
       solution_2v1_best.n_moves = move_number;
     }
+
     return;
   }
   // no, try all legal speeds
+
   for (new_speed = speed + 1; new_speed >= speed - 1; new_speed--)
     if (new_speed >= 1 && new_speed <= _max_road_speed_ && position + new_speed <= final_position)
     {
@@ -172,8 +177,6 @@ static void solution_3_SmartWay(int move_number, int position, int speed, int fi
             break;
           }
         }
-
-        
 
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
