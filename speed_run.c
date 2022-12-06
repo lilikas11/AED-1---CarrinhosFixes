@@ -207,7 +207,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
   int speed_test, md_position, new_speed, position_test;
   int brk = 0;
   solution_6_best.n_moves = 0;
-  int rd = 0;
+  int rd;
   int fp = 0;
 
   while (position < final_position)
@@ -218,6 +218,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
       posD = position;
       spdD = speed;
     }
+    rd = 0
     if (rd == 0 || fp == 0)
     {
       new_speed = speed + 1;
