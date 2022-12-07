@@ -106,8 +106,9 @@ static unsigned long solution_2v1_count; // effort dispended solving the problem
 static void solution_2v1_recursionTeste(int move_number, int position, int speed, int final_position)
 {
 
-  if(solution_2v1_best.positions[move_number] > position) return;
-  
+  if (solution_2v1_best.positions[move_number] > position)
+    return;
+
   int i, new_speed;
 
   // record move
@@ -211,6 +212,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
 
   while (position < final_position)
   {
+    printf("final position: %d", fp);
     rd = 0;
     if (rd == 0 || fp == 0)
     {
@@ -220,15 +222,14 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
       {
         position_test = position;
 
-        if ((position_test + (new_speed / 2) * (new_speed + 1)) > final_position)
-        {
-          fp = 1;
-          rd = 1;
-          break;
-        }
-
         for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
         {
+          if ((position_test + speed_test) > final_position)
+          {
+            fp = 1;
+            rd = 1;
+            break;
+          }
           for (md_position = 0; md_position <= speed_test; md_position++) // testar posicao de travagem
           {
             if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
@@ -251,14 +252,14 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
       new_speed = speed;
       position_test = position;
 
-      if ((position_test + (new_speed / 2) * (new_speed + 1)) > final_position)
-      {
-        fp = 2;
-        rd = 2;
-        break;
-      }
       for (speed_test = new_speed; speed_test >= 1; speed_test--) // i percorre todos os valores desde speed+1 (movimento ideal) até 1... --> velocidades assumidas na travagem
       {
+        if ((position_test + speed_test) > final_position)
+        {
+          fp = 2;
+          rd = 2;
+          break;
+        }
         for (md_position = 0; md_position <= speed_test; md_position++) // testar posicao de travagem
         {
           if (speed_test > max_road_speed[position_test + md_position]) // passa a velocidade da casa?
@@ -346,7 +347,7 @@ static void solve_6(int final_position)
   solution_6_count = 0ul;
   solution_6_best.n_moves = final_position + 100;
   // solution_6_Dinamic(movD, posD, spdD, final_position);
-  solution_6_Dinamic(0,0,0, final_position);
+  solution_6_Dinamic(0, 0, 0, final_position);
   solution_6_elapsed_time = cpu_time() - solution_6_elapsed_time;
 }
 
