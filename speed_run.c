@@ -205,20 +205,13 @@ static unsigned long solution_6_count; // effort dispended solving the problem
 static void solution_6_Dinamic(int move_number, int position, int speed, int final_position)
 {
   int speed_test, md_position, new_speed, position_test;
-  int brk = 0;
   solution_6_best.n_moves = 0;
   int rd;
   int fp = 0;
 
   while (position < final_position)
   {
-    if (fp == 0)
-    {
-      movD = move_number;
-      posD = position;
-      spdD = speed;
-    }
-    rd = 0
+    rd = 0;
     if (rd == 0 || fp == 0)
     {
       new_speed = speed + 1;
@@ -243,11 +236,6 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
               rd = 1;
               break;
             }
-          }
-
-          if (brk)
-          {
-            break; // deu errado? stop.
           }
 
           position_test += speed_test; // future_position --> posicao teste, i --> speed teste
@@ -280,11 +268,6 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
           }
         }
 
-        if (brk)
-        {
-          break; // deu errado? stop.
-        }
-
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
     }
@@ -298,6 +281,12 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
     solution_6_count++;
     solution_6_best.positions[move_number++] = position;
     solution_6_best.n_moves++;
+    if (fp == 0)
+    {
+      movD = move_number;
+      posD = position;
+      spdD = speed;
+    }
   }
 }
 
