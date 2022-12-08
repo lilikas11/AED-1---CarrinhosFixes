@@ -206,13 +206,12 @@ static unsigned long solution_6_count; // effort dispended solving the problem
 static void solution_6_Dinamic(int move_number, int position, int speed, int final_position)
 {
   int speed_test, md_position, new_speed, position_test;
-  solution_6_best.n_moves = 0;
+  solution_6_best.n_moves = move_number;
   int rd;
   int fp = 0;
 
   while (position < final_position)
   {
-    printf("final position: %d", fp);
     rd = 0;
     if (rd == 0 || fp == 0)
     {
@@ -276,12 +275,12 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
     {
       new_speed = speed - 1;
     }
-    // printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
     speed = new_speed;
     position += speed;
     solution_6_count++;
     solution_6_best.positions[move_number++] = position;
     solution_6_best.n_moves++;
+    printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
     if (fp == 0)
     {
       movD = move_number;
@@ -346,8 +345,9 @@ static void solve_6(int final_position)
   solution_6_elapsed_time = cpu_time();
   solution_6_count = 0ul;
   solution_6_best.n_moves = final_position + 100;
-  // solution_6_Dinamic(movD, posD, spdD, final_position);
-  solution_6_Dinamic(0, 0, 0, final_position);
+  //fazer os moves novos
+  solution_6_Dinamic(movD, posD, spdD, final_position);
+  // solution_6_Dinamic(0, 0, 0, final_position);
   solution_6_elapsed_time = cpu_time() - solution_6_elapsed_time;
 }
 
@@ -457,6 +457,7 @@ int main(int argc, char *argv[argc + 1])
         if (print_this_one != 0)
         {
           sprintf(file_name, "%03d_1.pdf", final_position);
+          // TODO: solucao que dado uma position mostra as anteriores
           make_custom_pdf_file(file_name, final_position, &max_road_speed[0], solution_6_best.n_moves, &solution_6_best.positions[0], solution_6_elapsed_time, solution_6_count, "Dinamic");
         }
         printf(" %3d %16lu %9.3e |", solution_6_best.n_moves, solution_6_count, solution_6_elapsed_time);
