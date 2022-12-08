@@ -205,11 +205,16 @@ static unsigned long solution_6_count; // effort dispended solving the problem
 
 static void solution_6_Dinamic(int move_number, int position, int speed, int final_position)
 {
+  // define some variables
   int speed_test, md_position, new_speed, position_test;
+  // save de values from the save value of move_number
   solution_6_best.n_moves = move_number;
+  // rd --> choose what option will the car choose (decrease rd=2, keep rd=1 or increase rd=0)
   int rd;
+  // fp --> if the car is close to the final point fp different from 0
   int fp = 0;
 
+  // repite this process until it gets to the final position
   while (position < final_position)
   {
     rd = 0;
@@ -280,7 +285,6 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
     solution_6_count++;
     solution_6_best.positions[move_number++] = position;
     solution_6_best.n_moves++;
-    printf("mv: %d, pos: %d, spd: %d, fp: %d \n", move_number, position, speed, final_position);
     if (fp == 0)
     {
       movD = move_number;
@@ -345,7 +349,8 @@ static void solve_6(int final_position)
   solution_6_elapsed_time = cpu_time();
   solution_6_count = 0ul;
   solution_6_best.n_moves = final_position + 100;
-  //fazer os moves novos
+  // fazer os moves novos
+  // em vez de começar com os valores 0,0,0,final_position começa com os valores guardados
   solution_6_Dinamic(movD, posD, spdD, final_position);
   // solution_6_Dinamic(0, 0, 0, final_position);
   solution_6_elapsed_time = cpu_time() - solution_6_elapsed_time;
