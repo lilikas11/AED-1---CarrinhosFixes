@@ -10,7 +10,7 @@
 //
 // Place your student numbers and names here
 //   N.Mec. 108713  Name: Liliana Ribeiro
-//   N.Mec. 108713  Name: L
+//   N.Mec. 108133  Name: Gonçalo Sousa
 
 //
 // static configuration
