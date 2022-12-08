@@ -218,6 +218,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
   while (position < final_position)
   {
     rd = 0;
+    // increase
     if (rd == 0 || fp == 0)
     {
       new_speed = speed + 1;
@@ -251,6 +252,7 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
         rd = 1;
       }
     }
+    // keep
     if (rd == 1 || fp == 1)
     {
       new_speed = speed;
@@ -276,15 +278,18 @@ static void solution_6_Dinamic(int move_number, int position, int speed, int fin
         position_test += speed_test; // future_position --> posicao teste, i --> speed teste
       }
     }
+    // decrease (dont run any testes because its the last option)
     if (rd == 2 || fp == 2)
     {
       new_speed = speed - 1;
     }
+    // save the values of this movement
     speed = new_speed;
     position += speed;
     solution_6_count++;
     solution_6_best.positions[move_number++] = position;
     solution_6_best.n_moves++;
+    // if the car didnt get close to the final position, we save the current move to use in the next call for the bigger position 
     if (fp == 0)
     {
       movD = move_number;
